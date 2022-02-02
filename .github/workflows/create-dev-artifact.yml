@@ -1,0 +1,26 @@
+name: Development build artifact
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  dev-release:
+    name: Development Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build & test
+        run: |
+          lein deps
+          lein test
+          lein uberjar
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
+          prerelease: true
+          files: |
+            LICENSE
+            target/uberjar/*.jar
