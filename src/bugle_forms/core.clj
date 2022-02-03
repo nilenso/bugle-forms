@@ -14,7 +14,7 @@
 
 (defn start-server []
   (reset! server (raj/run-jetty hello-world
-                                {:port 8080
+                                {:port (or (Integer. (System/getenv "PORT")) 80)
                                  :join? false})))
 
 (defn stop-server []
