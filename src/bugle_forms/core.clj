@@ -1,20 +1,22 @@
 (ns bugle-forms.core
-  (:require [ring.adapter.jetty :as raj])
+  (:require
+   [bugle-forms.views.layout :as layout]
+   [bugle-forms.views.home :as home]
+   [ring.adapter.jetty :as raj]
+   [ring.middleware.resource :refer [wrap-resource]]
+   [ring.util.response :as response]
+   [hiccup.page :refer [html5]])
   (:gen-class))
 
-(defn hello-world [request]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body
-   "<iframe src='//commons.wikimedia.org/wiki/File:FirstCall.ogg?embedplayer=yes'
-   width='300' height='20' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen>
-   </iframe>"})
+(defn home [request]
+  (response/response
+   (html5 (layout/application "Bugle Forms" home/content))))
 
 (defonce server (atom nil))
 
 (defn start-server []
-  (reset! server (raj/run-jetty hello-world
-                                {:port (or (Integer. (System/getenv "PORT")) 80)
+  (reset! server (raj/run-jetty (wrap-resource home "/")
+                                {:port (Integer. (or (System/getenv "PORT") "8080"))
                                  :join? false})))
 
 (defn stop-server []
