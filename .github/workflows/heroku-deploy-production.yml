@@ -6,7 +6,6 @@ on:
 
 jobs:
   call-build-workflow:
-    needs: call-test-workflow
     uses: ./.github/workflows/build-uberjar.yml
   deploy-to-staging:
     runs-on: ubuntu-latest
