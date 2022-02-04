@@ -13,6 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      env:
+        cache-name: cache-lein-deps
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('project.clj') }}
     - name: Install dependencies
       run: lein deps
     - name: Run tests
