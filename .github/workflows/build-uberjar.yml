@@ -1,0 +1,18 @@
+name: Build uberjar
+
+on: [ workflow_call ]
+
+jobs:
+  build-uberjar:
+    name: Build a standalone uberjar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          lein deps
+          lein uberjar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bugle-forms-uberjar
+          path: target/uberjar/bugle-forms-latest-standalone.jar

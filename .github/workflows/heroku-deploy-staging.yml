@@ -1,0 +1,25 @@
+name: Deploy to staging on Heroku
+
+on: [ push ]
+
+jobs:
+  call-test-workflow:
+    uses: ./.github/workflows/test.yml
+  call-build-workflow:
+    needs: call-test-workflow
+    uses: ./.github/workflows/build-uberjar.yml
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    needs: call-build-workflow
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+      with:
+        name: bugle-forms-uberjar
+        path: target/uberjar
+    - uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: bugle-forms-staging
+        heroku_email: atharva@nilenso.com
+        usedocker: true
