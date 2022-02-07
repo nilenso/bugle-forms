@@ -1,23 +1,22 @@
 (ns bugle-forms.core
   (:require
-   [bugle-forms.views.layout :as layout]
-   [bugle-forms.views.home :as home]
+   [bidi.ring :refer [make-handler]]
+   [bugle-forms.routes :as r]
    [ring.adapter.jetty :as raj]
-   [ring.middleware.resource :refer [wrap-resource]]
-   [ring.util.response :as response]
-   [hiccup.page :refer [html5]])
+   [ring.middleware.resource :as res])
   (:gen-class))
 
-(defn home [request]
-  (response/response
-   (html5 (layout/application "Bugle Forms" home/content))))
+(def app
+  (-> (make-handler r/routes)
+      (res/wrap-resource "")))
 
 (defonce server (atom nil))
 
 (defn start-server []
-  (reset! server (raj/run-jetty (wrap-resource home "/")
-                                {:port (Integer. (or (System/getenv "PORT") "8080"))
-                                 :join? false})))
+  (reset! server
+          (raj/run-jetty app
+                         {:port (Integer. (or (System/getenv "PORT") "8080"))
+                          :join? false})))
 
 (defn stop-server []
   (when @server (.stop @server))
