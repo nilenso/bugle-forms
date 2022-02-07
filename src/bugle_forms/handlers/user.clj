@@ -2,8 +2,8 @@
   (:require
    [ring.util.response :as response]))
 
-(defn signin [_]
-  (response/response "Stub for sign-in"))
+(defn login [_]
+  (response/response "Stub for log-in"))
 
 (defn signup [_]
   (response/response "Stub for sign-up"))

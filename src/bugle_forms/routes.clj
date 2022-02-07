@@ -7,5 +7,5 @@
   ["/"
    {""       {:get core-handlers/home}
     "signup" {:get user-handlers/signup}
-    "signin" {:get user-handlers/signin}
+    "login" {:get user-handlers/login}
     true     core-handlers/not-found}])

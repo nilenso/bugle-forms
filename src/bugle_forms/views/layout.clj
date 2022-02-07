@@ -18,7 +18,7 @@
          (include-css "/css/main.css")]
         [:body
          [:div {:class "main"}
-          (navbar [["Sign In" "/signin"]
+          (navbar [["Log In" "/login"]
                    ["Sign Up" "/signup"]])
           [:div {:class "content"}
            [:h1 {:class "page-title"} title]
