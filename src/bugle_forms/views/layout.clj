@@ -11,11 +11,11 @@
 (defn application [title & content]
   (list [:head [:title title]
          [:meta {:content "text/html" :charset "utf-8"}]
-         [:link {:rel "apple-touch-icon" :type "image/png" :sizes "180x180" :href "/apple-touch-icon.png"}]
-         [:link {:rel "icon" :type "image/png" :sizes "16x16" :href "/favicon-16x16.png"}]
-         [:link {:rel "icon" :type "image/png" :sizes "32x32" :href "/favicon-32x32.png"}]
-         [:link {:rel "manifest" :href "site.webmanifest"}]
-         (include-css "/css/main.css")]
+         [:link {:rel "apple-touch-icon" :type "image/png" :sizes "180x180" :href "/public/apple-touch-icon.png"}]
+         [:link {:rel "icon" :type "image/png" :sizes "16x16" :href "/public/favicon-16x16.png"}]
+         [:link {:rel "icon" :type "image/png" :sizes "32x32" :href "/public/favicon-32x32.png"}]
+         [:link {:rel "manifest" :href "/public/site.webmanifest"}]
+         (include-css "/public/css/main.css")]
         [:body
          [:div {:class "main"}
           (navbar [["Log In" "/login"]

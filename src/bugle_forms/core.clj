@@ -2,13 +2,11 @@
   (:require
    [bidi.ring :refer [make-handler]]
    [bugle-forms.routes :as r]
-   [ring.adapter.jetty :as raj]
-   [ring.middleware.resource :as res])
+   [ring.adapter.jetty :as raj])
   (:gen-class))
 
 (def app
-  (-> (make-handler r/routes)
-      (res/wrap-resource "")))
+  (-> (make-handler r/routes)))
 
 (defonce server (atom nil))
 
