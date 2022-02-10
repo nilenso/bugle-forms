@@ -8,17 +8,44 @@ you need to make your analytics, polls or events work.
 
 Resemblance to the name of any megacorporation is purely incidental.
 
-## Installation
+## Local setup
 
-TODO
+Ensure you have Leiningen installed.
 
-## Usage
+Clone this repository, and then:
 
-TODO
+Setup database:
 
-## Options
+```
+docker-compose up -d
+```
 
-TODO: listing of options this app accepts.
+Run migrations:
+
+```
+lein migrations migrate
+```
+
+Build and run the application:
+```
+lein uberjar
+docker build -t bugle-forms .
+docker run -dp 8080:8080 bugle-forms
+```
+
+You should now see the app running in `localhost:8080`.
+
+## Migrations
+
+To perform various migration tasks:
+
+```
+lein migrations migrate          # complete pending migrations
+lein migrations rollback         # rollback to previous state
+lein migrations up <ids ...>     # migrate specified ids
+lein migrations down <ids ...>   # rollback specified ids
+lein migrations create <name>    # generate migration files with specified name
+```
 
 ## License
 
