@@ -1,6 +1,7 @@
 (ns bugle-forms.core
   (:require
    [bidi.ring :refer [make-handler]]
+   [bugle-forms.config :as config]
    [bugle-forms.routes :as r]
    [ring.adapter.jetty :as raj])
   (:gen-class))
@@ -13,7 +14,7 @@
 (defn start-server []
   (reset! server
           (raj/run-jetty app
-                         {:port (Integer. (or (System/getenv "PORT") "8080"))
+                         {:port (config/get :port)
                           :join? false})))
 
 (defn stop-server []
@@ -21,7 +22,6 @@
   (reset! server nil))
 
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
   (println "🎺🎺🎺🎺🎺")
   (start-server))

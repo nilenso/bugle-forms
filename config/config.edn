@@ -1,0 +1,6 @@
+{:port #long #or [#env PORT 8080]
+ :secrets #include "secrets.edn"
+ :db-spec #profile {:test #ref [:secrets :test-db]
+                    :dev #ref [:secrets :dev-db]
+                    :heroku #ref [:secrets :heroku-db]
+                    :prod #ref [:secrets :prod-db]}}
