@@ -8,7 +8,10 @@
                  [ring/ring-jetty-adapter "1.9.5"]
                  [hiccup "1.0.5"]
                  [bidi "2.1.6"]
+                 [migratus "1.3.6"]
+                 [com.fzakaria/slf4j-timbre "0.3.21"]
                  [aero "1.1.6"]]
+  :aliases {"migrations" ["run" "-m" "bugle-forms.migrations/cmd-migrate"]}
   :main ^:skip-aot bugle-forms.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all

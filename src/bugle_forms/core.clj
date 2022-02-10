@@ -2,6 +2,7 @@
   (:require
    [bidi.ring :refer [make-handler]]
    [bugle-forms.config :as config]
+   [bugle-forms.migrations :as migrate]
    [bugle-forms.routes :as r]
    [ring.adapter.jetty :as raj])
   (:gen-class))
@@ -22,6 +23,12 @@
   (reset! server nil))
 
 (defn -main
-  [& args]
-  (println "🎺🎺🎺🎺🎺")
-  (start-server))
+  ([]
+   (println "🎺🎺🎺🎺🎺")
+   (migrate/migrate)
+   (start-server))
+  ([cmd migrate-cmd & args]
+   (println "🎺🎺🎺🎺🎺")
+   (if (= cmd "migrations")
+     (apply migrate/cmd-migrate migrate-cmd args)
+     (println "invalid option."))))
