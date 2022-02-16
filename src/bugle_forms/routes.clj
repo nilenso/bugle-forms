@@ -7,7 +7,8 @@
 (def routes
   ["/"
    {""       {:get core-handlers/home}
-    "signup" {:get user-handlers/signup}
+    "signup" {:get user-handlers/signup
+              :post user-handlers/create-user}
     "login"  {:get user-handlers/login}
     "public" {:get (br/->Resources {:prefix "public"})}
     true     core-handlers/not-found}])
