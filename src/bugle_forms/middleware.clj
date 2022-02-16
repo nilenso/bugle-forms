@@ -1,5 +1,6 @@
 (ns bugle-forms.middleware
   (:require
+   [clojure.stacktrace :as st]
    [clojure.walk :as walk]
    [ring.util.response :as response]))
 
@@ -8,7 +9,7 @@
     (try
       (handler request)
       (catch Exception e
-        (.printStackTrace e)
+        (st/print-stack-trace e)
         (-> (response/response "500 Internal Server Error. *sad bugle noises*")
             (response/status 500))))))
 
