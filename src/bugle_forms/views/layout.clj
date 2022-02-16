@@ -1,7 +1,9 @@
 (ns bugle-forms.views.layout
   (:require [hiccup.page :refer [include-css]]))
 
-(defn- navbar [nav-items]
+(defn- navbar
+  "Return a navbar representation from pairs of link titles and locations."
+  [nav-items]
   [:div {:class "nav"}
    [:a {:href "/" :title "home"} "🎺"]
    (map (fn [[link-title link-url]]
@@ -9,6 +11,9 @@
         nav-items)])
 
 (defn application
+  "Returns a representation of the application frontend.
+  Takes a title and a flash message that is displayed to the user when
+  specified."
   ([{:keys [title flash]} & content]
    (list [:head [:title title]
           [:meta {:content "text/html" :charset "utf-8"}]

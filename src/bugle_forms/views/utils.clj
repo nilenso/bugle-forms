@@ -2,7 +2,10 @@
   (:require
    [camel-snake-kebab.core :as csk]))
 
-(defn labelled-text-input [label & args]
+(defn labelled-text-input
+  "Create a representation of a labelled input box.
+  Takes a label along with an option map which are added as CSS attributes."
+  [label & args]
   (let [options (apply hash-map args)
         name (or (:name options)
                  (csk/->kebab-case-string label))]

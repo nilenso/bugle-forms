@@ -13,17 +13,23 @@
    [next.jdbc.sql :as sql]
    [ring.util.response :as response]))
 
-(defn login [{:keys [flash]}]
+(defn login
+  "Display login form."
+  [{:keys [flash]}]
   (response/response
    (html5 (layout/application {:title "Log In" :flash flash}
                               "Stub for log-in"))))
 
-(defn signup [{:keys [flash]}]
+(defn signup
+  "Display signup form."
+  [{:keys [flash]}]
   (response/response
    (html5 (layout/application {:title "Sign up" :flash flash}
                               user-views/signup))))
 
-(defn create-user [{:keys [form-params]}]
+(defn create-user
+  "Create a user from the signup form parameters in a request."
+  [{:keys [form-params]}]
   (let [valid? (s/valid? ::specs/signup-form form-params)
         account (and valid? (user/signup-params->account form-params))]
     (cond

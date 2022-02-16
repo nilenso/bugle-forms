@@ -23,7 +23,9 @@
 (defn down [ids]
   (apply migratus/down migration-config ids))
 
-(defn cmd-migrate [command & args]
+(defn cmd-migrate
+  "Utility to perform migrations from the command line."
+  [command & args]
   (case command
     "create"   (create (first args))
     "migrate"  (migrate)

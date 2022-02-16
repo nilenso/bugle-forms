@@ -3,6 +3,7 @@
    [bugle-forms.views.utils :as util]))
 
 (def signup
+  "Representation of the signup form."
   [:div
    [:form {:action "/signup" :method "POST"}
     [:div {:id "name"}
