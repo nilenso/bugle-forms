@@ -6,4 +6,6 @@
 (def db-spec (config/get :db-spec))
 
 (def datasource
-  (jdbc/get-datasource db-spec))
+  (jdbc/with-options
+    (jdbc/get-datasource db-spec)
+     jdbc/snake-kebab-opts))
