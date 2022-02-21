@@ -1,12 +1,14 @@
 (ns bugle-forms.migrations
   (:require
    [bugle-forms.config :as config]
-   [migratus.core :as migratus]))
+   [migratus.core :as migratus]
+   [mount.core :refer [defstate]]))
 
-(def migration-config
-  {:store :database
-   :migration-dir "migrations"
-   :db (config/get :db-spec)})
+(defstate migration-config
+  :start {:store :database
+          :migration-dir "migrations"
+          :db (config/get :db-spec)}
+  :stop nil)
 
 (defn create [name]
   (migratus/create migration-config name))

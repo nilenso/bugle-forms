@@ -4,6 +4,7 @@
    [bugle-forms.middleware :as m]
    [bugle-forms.migrations :as migrate]
    [bugle-forms.routes :as r]
+   [mount.core :as mount :refer [defstate]]
    [ring.middleware.flash :refer [wrap-flash]]
    [ring.middleware.params :refer [wrap-params]]
    [ring.middleware.session :refer [wrap-session]]
@@ -18,23 +19,24 @@
       wrap-session
       m/wrap-exception-handler))
 
-(defonce server (atom nil))
-
 (defn start-server []
-  (reset! server
-          (raj/run-jetty app
-                         {:port (config/get :port)
-                          :join? false})))
+  (raj/run-jetty app
+                 {:port (config/get :port)
+                  :join? false}))
 
-(defn stop-server []
-  (when @server (.stop @server))
-  (reset! server nil))
+(defn stop-server [server]
+  (when server
+    (.stop server)))
+
+(defstate server
+  :start (start-server)
+  :stop (stop-server server))
 
 (defn -main
   ([]
    (println "🎺🎺🎺🎺🎺")
-   (migrate/migrate)
-   (start-server))
+   (mount/start)
+   (migrate/migrate))
   ([cmd migrate-cmd & args]
    (println "🎺🎺🎺🎺🎺")
    (if (= cmd "migrations")

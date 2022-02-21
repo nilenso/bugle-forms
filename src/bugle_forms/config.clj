@@ -2,17 +2,20 @@
   (:refer-clojure :exclude [get])
   (:require
    [aero.core :as aero]
-   [clojure.java.io :as io]))
+   [clojure.java.io :as io]
+   [mount.core :refer [defstate]]))
 
-(def environment
+(defstate environment
   "Contains ENVIRONMENT as keyword if it has been defined, :dev profile if not."
-  (or (keyword (clojure.core/get (System/getenv) "ENVIRONMENT"))
-      :dev))
+  :start (or (keyword (clojure.core/get (System/getenv) "ENVIRONMENT"))
+             :dev)
+  :stop nil)
 
-(def config
+(defstate config
   "Contains the config data."
-  (aero/read-config (io/resource "config.edn")
-                    {:profile environment}))
+  :start (aero/read-config (io/resource "config.edn")
+                           {:profile environment})
+  :stop nil)
 
 (defn get [key]
   (clojure.core/get config key))

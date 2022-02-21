@@ -11,6 +11,7 @@
                  [com.github.seancorfield/next.jdbc "1.2.761"]
                  [hiccup "1.0.5"]
                  [migratus "1.3.6"]
+                 [mount "0.1.16"]
                  [org.clojure/clojure "1.10.3"]
                  [org.clojure/test.check "0.9.0"]
                  [org.postgresql/postgresql "42.3.2"]
