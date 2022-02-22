@@ -21,5 +21,7 @@ jobs:
         key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('project.clj') }}
     - name: Install dependencies
       run: lein deps
+    - name: Setup test database
+      run: docker-compose up -d
     - name: Run tests
       run: lein test
