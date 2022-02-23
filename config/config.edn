@@ -1,6 +1,11 @@
 {:port #long #or [#env PORT 8080]
- :secrets #include "secrets.edn"
- :db-spec #profile {:test #ref [:secrets :test-db]
-                    :dev #ref [:secrets :dev-db]
-                    :heroku #ref [:secrets :heroku-db]
-                    :prod #ref [:secrets :prod-db]}}
+ :dev-db {:dbtype   "postgresql"
+          :dbname   "bugle_dev"
+          :user     "bugle_dev"
+          :password "bugle_devpwd"
+          :host     "localhost"
+          :port     19401}
+ :secrets #profile {:prod #include "secrets.edn"
+                    :dev {:db-spec #ref [:dev-db]}
+                    :test {:db-spec #ref [:dev-db]}}
+ :db-spec #ref [:secrets :db-spec]}
