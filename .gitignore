@@ -13,3 +13,4 @@ pom.xml.asc
 .hg/
 .clj-kondo/.cache
 **/secrets.edn
+**/db_password.txt

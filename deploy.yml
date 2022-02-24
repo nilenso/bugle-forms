@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres:14.1
+    environment:
+      POSTGRES_USER: bugle_prod
+      POSTGRES_DB: bugle_prod
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    secrets:
+      - db_password
+    restart: always
+
+  web:
+    build: .
+    environment:
+      ENVIRONMENT: "${ENVIRONMENT:?Please set ENVIRONMENT to either staging or prod.}"
+      BUGLE_SECRETS_FILE: /run/secrets/app_secrets
+      PORT: 80
+    ports:
+      - 80:80
+    secrets:
+      - app_secrets
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  pgdata:
+
+secrets:
+  db_password:
+    file: /home/deploy/.config/bugle-forms/db_password.txt
+  app_secrets:
+    file: /home/deploy/.config/bugle-forms/secrets.edn

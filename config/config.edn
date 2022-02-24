@@ -5,7 +5,8 @@
           :password "bugle_devpwd"
           :host     "localhost"
           :port     19401}
- :secrets #profile {:prod #include "secrets.edn"
+ :secrets #profile {:prod #include #env BUGLE_SECRETS_FILE
+                    :staging #include #env BUGLE_SECRETS_FILE
                     :dev {:db-spec #ref [:dev-db]}
                     :test {:db-spec #ref [:dev-db]}}
  :db-spec #ref [:secrets :db-spec]}
