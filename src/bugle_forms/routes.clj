@@ -23,14 +23,15 @@
 
 (def routes
   ["/"
-   {""       {:get util-handlers/home}
-    "signup" {:get user-handlers/signup
-              :post (validate-request user-handlers/create-user
-                      {:spec ::specs/signup-form
-                       :request-field :form-params})}
-    "login"  {:get user-handlers/login}
-    "public" {:get (br/->Resources {:prefix "public"})}
-    true     util-handlers/not-found}])
+   {""          {:get util-handlers/home}
+    "signup"    {:get user-handlers/signup
+                 :post (validate-request user-handlers/create-user
+                                         {:spec ::specs/signup-form
+                                          :request-field :form-params})}
+    "login"     {:get user-handlers/login}
+    "dashboard" {:get user-handlers/dashboard}
+    "public"    {:get (br/->Resources {:prefix "public"})}
+    true        util-handlers/not-found}])
 
 (def route-handler
   (br/make-handler routes))

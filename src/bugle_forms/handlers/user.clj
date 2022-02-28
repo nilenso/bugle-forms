@@ -8,17 +8,21 @@
 
 (defn login
   "Display login form."
-  [{:keys [flash]}]
-  (response/response (layout/application
-                      {:title "Log In" :flash flash}
-                      "Stub for log-in")))
+  [{:keys [flash], {:keys [user]} :session}]
+  (if user
+    (response/redirect "/dashboard" :see-other)
+    (response/response (layout/application
+                        {:title "Log In" :flash flash :user user}
+                        "Stub for log-in"))))
 
 (defn signup
   "Display signup form."
-  [{:keys [flash]}]
-  (response/response (layout/application
-                      {:title "Sign up" :flash flash}
-                      user-views/signup)))
+  [{:keys [flash], {:keys [user]} :session}]
+  (if user
+    (response/redirect "/dashboard" :see-other)
+    (response/response (layout/application
+                        {:title "Sign up" :flash flash}
+                        user-views/signup))))
 
 (defn create-user
   "Create a user from the signup form parameters in a request."
@@ -28,3 +32,12 @@
       (-> (response/redirect "/login" :see-other)
           (assoc :flash "Account creation successful!"))
       (util/flash-redirect "/signup" "User already exists. Try logging in."))))
+
+(defn dashboard
+  "Display a user's dashboard."
+  [{:keys [flash], {:keys [user]} :session}]
+  (if-not user
+    (util/flash-redirect "/login" "Log in to access your dashboard.")
+    (response/response (layout/application
+                        {:title "Dashboard" :flash flash :user user}
+                        "Stub for dashboard"))))
