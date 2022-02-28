@@ -17,6 +17,7 @@
      (util/labelled-text-input
       "Email Address"
       :required true
+      :pattern "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{1,63}$"
       :id "email"
       :name "email"
       :type "email")]
@@ -24,6 +25,7 @@
      (util/labelled-text-input
       "Set a password"
       :required true
+      :minlength 8
       :id "password"
       :name "password"
       :type "password")]

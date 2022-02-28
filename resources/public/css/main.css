@@ -122,7 +122,7 @@ label {
     box-shadow: none;
     font-family: inherit;
     font-size: 1.5em;
-    color: #343434!important;
+    color: #343434 !important;
     width: 100%;
     padding: .375rem .75rem;
     line-height: 1.5;
@@ -131,6 +131,10 @@ label {
     border: 1px solid #ccc;
     -webkit-border-radius: .25rem;
     border-radius: .25rem;
+}
+
+.form-control:valid {
+    border: 2px solid #60935D;
 }
 
 textarea {
@@ -143,8 +147,4 @@ textarea {
 label{
     color:#000;
     text-transform:camel;
-}
-
-.form-control{
-    color:#000 !important;
 }

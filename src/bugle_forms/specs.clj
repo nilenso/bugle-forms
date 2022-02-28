@@ -11,19 +11,19 @@
   (gen/fmap #(apply str %)
             (gen/vector (gen/char-alphanumeric) start end)))
 
-(def email-regex #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$")
+(def email-regex #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,63}$")
 (defn- email-generator []
   (gen/fmap
    (fn [[name host tld]]
      (str name "@" host "." tld))
    (gen/tuple non-empty-alphanumeric-string
               non-empty-alphanumeric-string
-              (gen-string-in-range 2 10))))
+              (gen-string-in-range 1 10))))
 
 (s/def :user/name (s/and string? seq))
 (s/def :user/email (s/with-gen (s/and string? #(re-matches email-regex %))
                      email-generator))
-(s/def :user/password (s/and string? seq))
+(s/def :user/password (s/and string? #(> (count %) 7)))
 
 (s/def ::signup-form
   (s/keys :req-un [:user/name
