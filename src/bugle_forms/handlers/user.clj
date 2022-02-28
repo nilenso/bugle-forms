@@ -27,4 +27,4 @@
     (if (user/insert! user)
       (-> (response/redirect "/login" :see-other)
           (assoc :flash "Account creation successful!"))
-      (util/error-redirect "/signup" "User already exists. Try logging in."))))
+      (util/flash-redirect "/signup" "User already exists. Try logging in."))))

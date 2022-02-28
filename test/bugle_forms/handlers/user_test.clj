@@ -28,5 +28,5 @@
                               :password "t0ps3cr3t"}
           request {:form-params signup-form-params}
           response (sut/create-user request)]
-      (is (= 302 (:status response)))
+      (is (= 303 (:status response)))
       (is (= {"Location" "/signup"} (:headers response))))))

@@ -22,9 +22,8 @@
   [_]
   (response/bad-request "Bad request."))
 
-(defn error-redirect
-  "Redirect to another route with a flash message.
-  Use this to redirect to another page when something goes wrong."
+(defn flash-redirect
+  "Redirect to another route with a flash message."
   [route message]
-  (-> (response/redirect route)
+  (-> (response/redirect route :see-other)
       (assoc :flash message)))
