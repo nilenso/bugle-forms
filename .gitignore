@@ -11,3 +11,6 @@ pom.xml.asc
 /.prepl-port
 .hgignore
 .hg/
+.clj-kondo/.cache
+**/secrets.edn
+**/db_password.txt

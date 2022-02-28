@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+
+  dev-db:
+    image: postgres:14.1
+    environment:
+      POSTGRES_USER: bugle_dev
+      POSTGRES_DB: bugle_dev
+      POSTGRES_PASSWORD: bugle_devpwd
+    ports:
+      - 19401:5432

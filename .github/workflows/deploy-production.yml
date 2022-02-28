@@ -1,0 +1,37 @@
+name: Deploy to production on a VPS
+
+on:
+  push:
+    tags:
+      - 'v**'
+
+jobs:
+  call-test-workflow:
+    uses: ./.github/workflows/test.yml
+  call-build-workflow:
+    needs: call-test-workflow
+    uses: ./.github/workflows/build-uberjar.yml
+  deploy-to-staging:
+    needs: call-build-workflow
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+      with:
+        name: bugle-forms-uberjar
+        path: target/uberjar
+    - name: Setup ssh
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.PROD_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        sudo chmod 600 ~/.ssh/id_rsa
+        echo "${{ secrets.PROD_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+    - name: Deploy with docker compose
+      env:
+        DOCKER_HOST: ${{ format('ssh://{0}@{1}', secrets.PROD_USER, secrets.PROD_HOST) }}
+        ENVIRONMENT: prod
+        COMPOSE_DOCKER_CLI_BUILD: 0
+      run: |
+        docker-compose -f deploy.yml down
+        docker-compose -f deploy.yml up --build -d

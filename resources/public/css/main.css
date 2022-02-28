@@ -1,0 +1,150 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;800&display=swap');
+
+body {
+    background-color: #FCF7F8;
+    font-family: "Syne", sans-serif;
+    font-size: 1.2em;
+}
+
+a {
+    color: #28536B;
+    border-radius: 4px;
+    outline: none;
+    text-decoration: none;
+    padding: 2px 1px 0;
+    transition: 0.2s ease-in-out;
+}
+
+a:hover {
+    background-color: #F6F0ED;
+}
+
+.main {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80%;
+    display: grid;
+    grid-template-columns: 1fr 30% 30% 1fr;
+    grid-template-rows: 3em 1fr 4em;
+    grid-template-areas:
+        "nav nav nav nav"
+        "page page page page"
+        "footer footer footer footer";
+    width: 1000px;
+}
+
+.nav {
+    font-size: 1.3em;
+    grid-area: nav;
+    justify-self: center;
+    align-self: center;
+}
+
+.nav a {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.content {
+    grid-column: 2 / span 2;
+}
+
+form > div {
+    margin-bottom: 0.6em;
+}
+
+button {
+    align-items: center;
+    background-color: #FCF7F8;
+    border: 2px solid #111;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #111;
+    cursor: pointer;
+    display: flex;
+    font-family: inherit;
+    font-size: 1.5em;
+    height: 1.8em;
+    justify-content: center;
+    line-height: 24px;
+    max-width: 100%;
+    padding: 0 25px;
+    margin-top: 1em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+button:after {
+    background-color: #111;
+    border-radius: 8px;
+    content: "";
+    display: block;
+    height: 1.8em;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    top: -2px;
+    transform: translate(8px, 8px);
+    transition: transform .2s ease-out;
+    z-index: -1;
+}
+
+button:hover:after {
+    transform: translate(0, 0);
+}
+
+button:active {
+    background-color: #EED3D8;
+    outline: 0;
+}
+
+button:hover {
+    outline: 0;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.5rem;
+}
+
+label {
+    margin: 0;
+    display: block;
+}
+
+.form-control {
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 1.5em;
+    color: #343434 !important;
+    width: 100%;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    -webkit-border-radius: .25rem;
+    border-radius: .25rem;
+}
+
+.form-control:valid {
+    border: 2px solid #60935D;
+}
+
+textarea {
+    resize: none;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.25rem;
+    width: 100%;
+}
+
+label{
+    color:#000;
+    text-transform:camel;
+}

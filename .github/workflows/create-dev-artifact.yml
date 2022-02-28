@@ -17,6 +17,8 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('project.clj') }}
+      - name: Setup test database
+        run: docker-compose up -d
       - name: Build & test
         run: |
           lein deps
