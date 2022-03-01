@@ -13,7 +13,7 @@
     (response/redirect "/dashboard" :see-other)
     (response/response (layout/application
                         {:title "Log In" :flash flash :user user}
-                        "Stub for log-in"))))
+                        user-views/login))))
 
 (defn signup
   "Display signup form."
