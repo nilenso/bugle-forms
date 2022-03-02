@@ -10,7 +10,7 @@
 
 (deftest create-user
   (testing "User is created successfully"
-    (let [email "gs@nilen.so"
+    (let [email "new-gs@nilen.so"
           signup-form-params {:name "Ghanshyam"
                               :email email
                               :password "t0ps3cr3t"}
@@ -30,6 +30,41 @@
           response (sut/create-user request)]
       (is (= 303 (:status response)))
       (is (= {"Location" "/signup"} (:headers response))))))
+
+(deftest login-and-logout
+  (let [signup-form-params {:name "Ghanshyam Pinto"
+                            :email "gs@nilen.so"
+                            :password "t0ps3cr3t"}
+        signup-request {:form-params signup-form-params}
+        _ (sut/create-user signup-request)]
+    (testing "Successful login has session attached and redirects to dashboard"
+      (let [login-form-params (select-keys signup-form-params
+                                           [:email :password])
+            login-request {:form-params login-form-params}
+            response (sut/create-session login-request)]
+        (is (:session response))
+        (is (= 303 (:status response)))
+        (is (= {"Location" "/dashboard"} (:headers response)))))
+
+    (testing "Unsuccessful login redirects to login page again"
+      (let [login-form-params {:email (:email signup-form-params)
+                               :password "hunter2"}
+            login-request {:form-params login-form-params}
+            response (sut/create-session login-request)]
+        (is (= 303 (:status response)))
+        (is (= {"Location" "/login"} (:headers response)))))
+
+    (testing "Logout deletes session"
+      (let [login-form-params (select-keys signup-form-params
+                                           [:email :password])
+            login-request {:form-params login-form-params}
+            _ (sut/create-session login-request)
+            logout-request {:session {:user "some-user"
+                                      :id "some-session-id"}}
+            response (sut/logout logout-request)]
+        (is (nil? (:session response)))
+        (is (= 303 (:status response)))
+        (is (= {"Location" "/"} (:headers response)))))))
 
 (deftest logged-in-user-routes
   (testing "Logged in user is redirected to dashboard from login page"
