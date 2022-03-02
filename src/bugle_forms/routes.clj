@@ -28,7 +28,9 @@
                  :post (validate-request user-handlers/create-user
                                          {:spec ::specs/signup-form
                                           :request-field :form-params})}
-    "login"     {:get user-handlers/login}
+    "login"     {:get user-handlers/login
+                 :post user-handlers/create-session}
+    "logout"    {:get user-handlers/logout}
     "dashboard" {:get user-handlers/dashboard}
     "public"    {:get (br/->Resources {:prefix "public"})}
     true        util-handlers/not-found}])

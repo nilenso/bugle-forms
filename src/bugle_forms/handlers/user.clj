@@ -24,6 +24,18 @@
                         {:title "Sign up" :flash flash}
                         user-views/signup))))
 
+(defn create-session
+  "Create a session on a successful login."
+  [{:keys [form-params session]}]
+  (if (:user session)
+    (response/redirect "/dashboard" :see-other)
+    (let [session-data (user/authenticate form-params)]
+      (if (:error session-data)
+        (util/flash-redirect
+         "/login" "Login failed; Invalid email or password.")
+        (-> (response/redirect "/dashboard" :see-other)
+            (assoc :session (merge session {:user session-data})))))))
+
 (defn create-user
   "Create a user from the signup form parameters in a request."
   [{:keys [form-params]}]
@@ -33,6 +45,14 @@
           (assoc :flash "Account creation successful!"))
       (util/flash-redirect "/signup" "User already exists. Try logging in."))))
 
+(defn logout
+  "Log the user out; deletes session."
+  [{{:keys [user]} :session}]
+  (if-not user
+    (response/redirect "/login" :see-other)
+    (-> (util/flash-redirect "/" "Logged out successfully.")
+        (assoc :session nil))))
+
 (defn dashboard
   "Display a user's dashboard."
   [{:keys [flash], {:keys [user]} :session}]
@@ -40,4 +60,4 @@
     (util/flash-redirect "/login" "Log in to access your dashboard.")
     (response/response (layout/application
                         {:title "Dashboard" :flash flash :user user}
-                        "Stub for dashboard"))))
+                        (format "Stub for dashboard. Hi, %s!" (:name user))))))

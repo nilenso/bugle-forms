@@ -7,10 +7,12 @@
 
 (defn home
   "Display home page."
-  [{:keys [flash]}]
-  (response/response (layout/application
-                      {:title "Bugle Forms" :flash flash}
-                      home-views/content)))
+  [{:keys [flash], {:keys [user]} :session}]
+  (if user
+    (response/redirect "/dashboard" :see-other)
+    (response/response (layout/application
+                        {:title "Bugle Forms" :flash flash}
+                        home-views/content))))
 
 (defn not-found
   "Display 404 page."
