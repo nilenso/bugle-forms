@@ -1,6 +1,9 @@
 name: Deploy to staging on a VPS
 
-on: [ push ]
+on:
+  push:
+    branches-ignore:
+      - 'adr/**'
 
 jobs:
   call-test-workflow:
