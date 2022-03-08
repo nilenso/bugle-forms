@@ -31,6 +31,7 @@
       (let [login-params (select-keys user-data [:email :password])
             auth-response (user/authenticate login-params)]
         (is (string? (:id auth-response)))
+        (is (not-empty (:id auth-response)))
         (is (= (:name user-data) (:name auth-response)))))
 
     (testing "Nonexistent user gets an error"

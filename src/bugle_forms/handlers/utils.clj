@@ -29,3 +29,9 @@
   [route message]
   (-> (response/redirect route :see-other)
       (assoc :flash message)))
+
+(defn error-response
+  "Display 500 internal server error page."
+  [_]
+  (-> (response/response "500 Internal Server Error. *sad bugle noises*")
+      (response/status 500)))

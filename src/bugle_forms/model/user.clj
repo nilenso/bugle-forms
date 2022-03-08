@@ -43,12 +43,13 @@
   Returns a map containing username and a random session ID if successful, or an
   error value otherwise."
   [{email :email, given-pwd :password}]
-  (if-let [{pwd :password, name :name}
+  (if-let [{pwd :password, name :name, uuid :id}
            (plan/select-one!
-            db/datasource [:name :password]
-            ["select name, password from user_account where email = ?" email])]
+            db/datasource [:id :name :password]
+            ["select id, name, password from user_account where email = ?" email])]
     (if (:valid (hashers/verify given-pwd pwd))
       {:id (generate-session-id)
+       :uuid uuid
        :name name}
       {:error :invalid-password})
     {:error :no-user-found}))

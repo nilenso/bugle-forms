@@ -3,7 +3,7 @@
    [bugle-forms.config :as config]
    [bugle-forms.middleware :as m]
    [bugle-forms.migrations :as migrate]
-   [bugle-forms.routes :as r]
+   [bugle-forms.handler-dispatch :as dispatch]
    [mount.core :as mount :refer [defstate]]
    [ring.middleware.flash :refer [wrap-flash]]
    [ring.middleware.params :refer [wrap-params]]
@@ -12,7 +12,7 @@
   (:gen-class))
 
 (def app
-  (-> r/route-handler
+  (-> dispatch/route-handler
       m/wrap-keyword-form-params
       wrap-params
       wrap-flash

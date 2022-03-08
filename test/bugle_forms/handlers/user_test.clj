@@ -41,7 +41,7 @@
       (let [login-form-params (select-keys signup-form-params
                                            [:email :password])
             login-request {:form-params login-form-params}
-            response (sut/create-session login-request)]
+            response (sut/login login-request)]
         (is (:session response))
         (is (= 303 (:status response)))
         (is (= {"Location" "/dashboard"} (:headers response)))))
@@ -50,57 +50,19 @@
       (let [login-form-params {:email (:email signup-form-params)
                                :password "hunter2"}
             login-request {:form-params login-form-params}
-            response (sut/create-session login-request)]
+            response (sut/login login-request)]
         (is (= 303 (:status response)))
+        (is (nil? (:session response)))
         (is (= {"Location" "/login"} (:headers response)))))
 
     (testing "Logout deletes session"
       (let [login-form-params (select-keys signup-form-params
                                            [:email :password])
             login-request {:form-params login-form-params}
-            _ (sut/create-session login-request)
-            logout-request {:session {:user "some-user"
-                                      :id "some-session-id"}}
+            {{{:keys [id]} :user} :session} (sut/login login-request)
+            logout-request {:session {:name (:name signup-form-params)
+                                      :id id}}
             response (sut/logout logout-request)]
         (is (nil? (:session response)))
         (is (= 303 (:status response)))
         (is (= {"Location" "/"} (:headers response)))))))
-
-(deftest logged-in-user-routes
-  (testing "Logged in user is redirected to dashboard from login page"
-    (let [request {:session {:user {:name "Ghanshyam Pinto"
-                                    :id (java.util.UUID/randomUUID)}}}
-          response (sut/login request)]
-      (is (= 303 (:status response)))
-      (is (= {"Location" "/dashboard"} (:headers response)))))
-
-  (testing "Logged in user is redirected to dashboard from signup page"
-    (let [request {:session {:user {:name "Ghanshyam Pinto"
-                                    :id (java.util.UUID/randomUUID)}}}
-          response (sut/signup request)]
-      (is (= 303 (:status response)))
-      (is (= {"Location" "/dashboard"} (:headers response)))))
-
-  (testing "Logged in user can see dashboard"
-    (let [request {:session {:user {:name "Ghanshyam Pinto"
-                                    :id (java.util.UUID/randomUUID)}}}
-          response (sut/dashboard request)]
-      (is (= 200 (:status response)))
-      (is (re-find #"Log Out" (:body response))))))
-
-(deftest logged-out-user-routes
-  (testing "Logged out user can see login page"
-    (let [request {:session nil}
-          response (sut/login request)]
-      (is (= 200 (:status response)))))
-
-  (testing "Logged out user can see signup page"
-    (let [request {:session nil}
-          response (sut/signup request)]
-      (is (= 200 (:status response)))))
-
-  (testing "Logged out user is redirected to login when trying to see dashboard"
-    (let [request {:session nil}
-          response (sut/dashboard request)]
-      (is (= 303 (:status response)))
-      (is (= {"Location" "/login"} (:headers response))))))
