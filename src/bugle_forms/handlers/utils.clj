@@ -7,10 +7,12 @@
 
 (defn home
   "Display home page."
-  [{:keys [flash]}]
-  (response/response (layout/application
-                      {:title "Bugle Forms" :flash flash}
-                      home-views/content)))
+  [{:keys [flash], {:keys [user]} :session}]
+  (if user
+    (response/redirect "/dashboard" :see-other)
+    (response/response (layout/application
+                        {:title "Bugle Forms" :flash flash}
+                        home-views/content))))
 
 (defn not-found
   "Display 404 page."
@@ -22,9 +24,14 @@
   [_]
   (response/bad-request "Bad request."))
 
-(defn error-redirect
-  "Redirect to another route with a flash message.
-  Use this to redirect to another page when something goes wrong."
+(defn flash-redirect
+  "Redirect to another route with a flash message."
   [route message]
-  (-> (response/redirect route)
+  (-> (response/redirect route :see-other)
       (assoc :flash message)))
+
+(defn error-response
+  "Display 500 internal server error page."
+  [_]
+  (-> (response/response "500 Internal Server Error. *sad bugle noises*")
+      (response/status 500)))

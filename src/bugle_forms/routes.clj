@@ -1,36 +1,39 @@
 (ns bugle-forms.routes
   (:require
-   [bidi.ring :as br]
+   [bidi.ring]
    [bugle-forms.handlers.user :as user-handlers]
    [bugle-forms.handlers.utils :as util-handlers]
-   [bugle-forms.specs :as specs]
-   [clojure.spec.alpha :as s]))
-
-(defn validate-request
-  "Guard against malformed requests.
-  Takes an map containing a handler and options to validate the request.
-
-  If the `:spec` option is given, the handler is called only when the
-  `:request-field` value in the request matches the spec, else a 400 status
-  response is returned."
-  [handler {:keys [spec request-field]}]
-  (fn [request]
-    (if-not spec
-      (handler request)
-      (if (s/valid? spec (get request request-field))
-        (handler request)
-        (util-handlers/bad-request request)))))
+   [bugle-forms.specs :as specs]))
 
 (def routes
   ["/"
-   {""       {:get util-handlers/home}
-    "signup" {:get user-handlers/signup
-              :post (validate-request user-handlers/create-user
-                      {:spec ::specs/signup-form
-                       :request-field :form-params})}
-    "login"  {:get user-handlers/login}
-    "public" {:get (br/->Resources {:prefix "public"})}
-    true     util-handlers/not-found}])
+   {""          {:get ::home}
+    "signup"    {:get  ::signup
+                 :post ::create-user}
+    "login"     {:get  ::login-form
+                 :post ::login}
+    "logout"    {:get ::logout}
+    "dashboard" {:get ::dashboard}
+    "public"    {:get (bidi.ring/->Resources {:prefix "public"})}
+    true        ::not-found}])
 
-(def route-handler
-  (br/make-handler routes))
+(def handler-specs
+  "Specification of handlers for a matched route.
+  Contains guards for structural validation and access control. Not to be
+  confused with Clojure specs."
+  {::home        {:handler util-handlers/home}
+   ::signup      {:handler user-handlers/signup}
+   ::create-user {:handler user-handlers/create-user
+                  :validate {:spec  ::specs/signup-form
+                             :field :form-params}}
+   ::login-form  {:handler user-handlers/login-form
+                  :access-control {:needs :guest}}
+   ::login       {:handler user-handlers/login
+                  :access-control {:needs :guest}
+                  :validate {:spec  ::specs/login-form
+                             :field :form-params}}
+   ::logout      {:handler  user-handlers/logout
+                  :access-control {:needs :member}}
+   ::dashboard   {:handler user-handlers/dashboard
+                  :access-control {:needs :member}}
+   ::not-found   {:handler util-handlers/not-found}})

@@ -30,6 +30,10 @@
                    :user/email
                    :user/password]))
 
+(s/def ::login-form
+  (s/keys :req-un [:user/email
+                   :user/password]))
+
 (s/def ::user-account
   (s/keys :req [:user/name
                 :user/email
