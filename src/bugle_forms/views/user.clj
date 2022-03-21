@@ -2,6 +2,10 @@
   (:require
    [bugle-forms.views.utils :as util]))
 
+(defn dashboard-greeting
+  [user]
+  (list [:h1 (format "Hi, %s 👋" (:name user))]))
+
 (def signup
   "Representation of the signup form."
   [:div

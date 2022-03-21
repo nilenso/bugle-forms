@@ -1,7 +1,9 @@
 (ns bugle-forms.handlers.user
   (:require
    [bugle-forms.handlers.utils :as util]
+   [bugle-forms.model.form :as form]
    [bugle-forms.model.user :as user]
+   [bugle-forms.views.form :as form-views]
    [bugle-forms.views.user :as user-views]
    [bugle-forms.views.layout :as layout]
    [ring.util.response :as response]))
@@ -50,4 +52,7 @@
   [{:keys [flash], {:keys [user]} :session}]
   (response/response (layout/application
                       {:title "Dashboard" :flash flash :user user}
-                      (format "Stub for dashboard. Hi, %s!" (:name user)))))
+                      (list form-views/add-form
+                            [:hr]
+                            (user-views/dashboard-greeting user)
+                            (form-views/list-forms (form/get-forms user))))))
