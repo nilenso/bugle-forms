@@ -38,3 +38,17 @@
   (s/keys :req [:user/name
                 :user/email
                 :user/password]))
+
+(s/def :form/id uuid?)
+(s/def :form/name (s/and string? seq))
+(s/def :form/owner uuid?)
+(s/def :form/created inst?)
+
+(s/def ::form
+  (s/keys :req [:form/id
+                :form/name
+                :form/owner
+                :form/created]))
+
+(s/def ::form-creation-form
+  (s/keys :req-un [:form/name]))
