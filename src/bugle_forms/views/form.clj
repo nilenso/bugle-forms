@@ -17,9 +17,17 @@
      :placeholder "Enter form name...")
     [:button {:type "submit" :class "btn"} "→"]]])
 
-(def form->html
-  "TODO: Add form questions"
-  (constantly [:p "Form questions will appear here."]))
+(defn list-questions
+  "Returns representation of form questions."
+  [questions]
+  (if (empty? questions)
+      [:p "Form questions will appear here."]
+      [:div {:class "question-view"}
+       [:h4 "Questions"]
+       [:ul
+        (map (fn [question]
+               [:li (:text question)])
+             questions)]]))
 
 (defn formatted-time
   "Returns a human readable timestamp from a JDBC SQL timestamp."
@@ -42,15 +50,16 @@
 
 (defn form-builder
   "Generate representation of form builder."
-  [form]
+  [form-id questions]
   [:div
-   (form->html form)
+   (list-questions questions)
    [:form {:method "post"}
-    [:label {:for "question-input" :class "form-label"}
+    [:label {:for "text" :class "form-label"}
      "Enter your question:"]
     [:input {:class "form-control" :type "text"
-             :name "question-input" :id "question-input"}]
+             :name "text" :id "text"}]
     [:span {:class "builder-control"}
-     [:button {:formaction "/question" :type "button"
+     [:button {:formaction (str "/form/" form-id "/question")
+               :type "submit"
                :id "add-question" :class "btn"}
       "+ Add"]]]])

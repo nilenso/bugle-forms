@@ -192,3 +192,27 @@ label {
 .form-list-item span {
     margin-left: auto;
 }
+
+.question-view {
+    border: 2px solid #625834;
+    padding: 0 1em;
+    border-radius: 15px;
+    margin-bottom: 1em;
+    background-color: #EED3D8;
+}
+
+.question-view h4 {
+    color: #000;
+    border-bottom: 2px solid #625834;
+    margin: 0.8em;
+}
+
+.question-view ul {
+    margin: 0.8em;
+    padding-left: 0;
+}
+
+.question-view li {
+    list-style-type: disclosure-closed;
+    margin-bottom: 0.3em;
+}
