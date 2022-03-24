@@ -47,6 +47,29 @@ lein migrations down <ids ...>   # rollback specified ids
 lein migrations create <name>    # generate migration files with specified name
 ```
 
+## Making a deployment on a VPS
+
+We use docker compose to deploy to a remote server. Ensure you have the following in place:
+
+- A user on the server named 'deploy'. In the `/home/deploy/.config/bugle-forms` folder, ensure you have:
+    - A file named `db_password.txt` which contains the password for the database you that will be provisioned.
+    - A file named `secrets.edn` which contains configuration for the deployment. (See config format section below)
+
+To make the deployment, you need to run `docker-compose -f deploy.yml up -d` on the server side. We do this by setting the `DOCKER_HOST` variable to the ssh url of the remote server. Also ensure that `ENVIRONMENT` is set to either `prod` or `staging`.
+
+## Secrets configuration
+
+An example `secrets.edn` config file that uses all the available configuration options:
+
+``` edn
+{:db-spec  {:dbtype   "postgresql"
+            :dbname   "bugle_prod"
+            :user     "bugle_prod"
+            :password "tops3cr3t"
+            :host     "db"
+            :port     5432}}
+```
+
 ## License
 
 Copyright © 2022 Nilenso
