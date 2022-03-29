@@ -36,3 +36,24 @@
            (into {} (map (fn [[k v]]
                            {k (fn [] (gen/return v))})
                          overrides))))))
+(defn question
+  "Randomly generate a question.
+  Optionally takes a map of overrides."
+  ([] (question {}))
+  ([overrides]
+   (gen/generate
+    (s/gen ::specs/question
+           (into {} (map (fn [[k v]]
+                           {k (fn [] (gen/return v))})
+                         overrides))))))
+
+(defn question-form-params
+  "Randomly generate form params for creating form.
+  Optionally takes a map of overrides."
+  ([] (question-form-params {}))
+  ([overrides]
+   (gen/generate
+    (s/gen ::specs/add-question-form
+           (into {} (map (fn [[k v]]
+                           {k (fn [] (gen/return v))})
+                         overrides))))))

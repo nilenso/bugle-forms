@@ -1,8 +1,9 @@
 (ns bugle-forms.routes
   (:require
    [bidi.ring]
-   [bugle-forms.handlers.user :as user-handlers]
    [bugle-forms.handlers.form :as form-handlers]
+   [bugle-forms.handlers.question :as question-handlers]
+   [bugle-forms.handlers.user :as user-handlers]
    [bugle-forms.handlers.utils :as util-handlers]
    [bugle-forms.specs :as specs]))
 
@@ -16,7 +17,8 @@
     ["logout" {:get ::logout}]
     ["dashboard" {:get ::dashboard}]
     [["form-builder/" :id] {:get ::form-builder}]
-    ["form" {"" {:post ::create-form}}]
+    ["form" {"" {:post ::create-form}
+             ["/" :form-id "/question"] {:post ::add-question}}]
     ["public" {:get (bidi.ring/->Resources {:prefix "public"})}]
     [true ::not-found]]])
 
@@ -46,4 +48,8 @@
                               :field :form-params}}
    ::form-builder {:handler form-handlers/form-builder
                    :access-control {:needs :member}}
+   ::add-question {:handler question-handlers/add-question
+                   :access-control {:needs :member}
+                   :validate {:spec ::specs/add-question-form
+                              :field :form-params}}
    ::not-found    {:handler util-handlers/not-found}})

@@ -52,3 +52,19 @@
 
 (s/def ::form-creation-form
   (s/keys :req-un [:form/name]))
+
+(s/def :question/id uuid?)
+(s/def :question/form-id uuid?)
+(s/def :question/text (s/and string? seq))
+(s/def :question/created inst?)
+(s/def :question/updated inst?)
+
+(s/def ::question
+  (s/keys :req [:question/id
+                :question/form-id
+                :question/text
+                :question/created
+                :question/updated]))
+
+(s/def ::add-question-form
+  (s/keys :req-un [:question/text]))
