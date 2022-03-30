@@ -17,6 +17,7 @@
                  [org.postgresql/postgresql "42.3.2"]
                  [ring/ring-core "1.9.5"]
                  [ring/ring-jetty-adapter "1.9.5"]]
+  :plugins [[lein-cloverage "1.2.2"]]
   :aliases {"migrations" ["run" "-m" "bugle-forms.migrations/cmd-migrate"]}
   :main ^:skip-aot bugle-forms.app
   :target-path "target/%s"
