@@ -33,13 +33,15 @@
     (let [user (factories/user)
           {user-id :user-account/id} (user/insert! user)
           form (factories/form {:form/owner user-id})
-          {:form/keys [id]} (sut/insert! form)]
-      (is (= (sut/get id)
-             (sql/get-by-id db/datasource :form id)))))
+          {:form/keys [id]} (sut/insert! form)
+          inserted-form (-> (sql/get-by-id db/datasource :form id)
+                            (update :form/status keyword))]
+      (is (= (sut/get id) inserted-form))))
 
   (testing "Cannot `get` a form that does not exist"
-    (let [non-existent-form (factories/form)]
-      (is (:error (sut/get (:form/id non-existent-form))))))
+    (let [non-existent-form (factories/form)
+          non-existent-get-result (sut/get (:form/id non-existent-form))]
+      (is (= :form-not-found (:error non-existent-get-result)))))
 
   (testing "All the user's forms are retrieved correctly"
     (let [user (factories/user)

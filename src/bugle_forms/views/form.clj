@@ -44,8 +44,8 @@
    [:hr]
    (map (fn [form]
           [:div {:class "form-list-item"}
-           [:a {:href (str "/form-builder/" (:id form))} (:name form)]
-           [:span (formatted-time (:created form))]])
+           [:a {:href (str "/form-builder/" (:form/id form))} (:form/name form)]
+           [:span (formatted-time (:form/created form))]])
         forms)))
 
 (defn form-builder
