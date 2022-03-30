@@ -56,10 +56,15 @@
    [:form {:method "post"}
     [:label {:for "text" :class "form-label"}
      "Enter your question:"]
-    [:input {:class "form-control" :type "text"
+    [:span {:class "builder-control" :id "question-input"}
+     [:input {:class "form-control" :type "text"
              :name "text" :id "text"}]
-    [:span {:class "builder-control"}
      [:button {:formaction (str "/form/" form-id "/question")
                :type "submit"
                :id "add-question" :class "btn"}
-      "+ Add"]]]])
+      "+"]]
+    [:span {:class "builder-control"}
+     [:button {:formaction (str "/form/" form-id "/publish")
+               :type "submit"
+               :id "publish-form" :class "btn"}
+      "Publish"]]]])
