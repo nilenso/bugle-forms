@@ -48,3 +48,25 @@
                    ["select id, name, owner, status, created
                     from form where owner = ?
                     order by created desc" uuid])))
+
+(defn published?
+  "Is the form having `id` published?"
+  [form]
+  (= :published (:form/status form)))
+
+(defn publish!
+  "Change form status to published.
+  Takes the user session data and form ID to publish."
+  [{user-id :uuid} id]
+  (let [{form-not-found :error
+         owner :form/owner
+         :as form}
+        (bugle-forms.model.form/get id)]
+    (cond
+      form-not-found       {:error :form-not-found}
+      (published? form)    {:error :form-already-published}
+      (not= owner user-id) {:error :unauthorized-access}
+      :else                (sql/update! db/datasource form-table
+                                        {:status (jdbc-types/as-other
+                                                  "published")}
+                                        {:id id}))))
