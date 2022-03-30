@@ -70,3 +70,14 @@
 
 (s/def ::add-question-form
   (s/keys :req-un [:question/text]))
+
+(s/def :response/id uuid?)
+(s/def :response/form-id uuid?)
+(s/def :response/created inst?)
+(s/def :response/updated inst?)
+
+(s/def ::response
+  (s/keys :req [:response/id
+                :response/form-id
+                :response/created
+                :response/updated]))
