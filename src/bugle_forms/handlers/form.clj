@@ -33,3 +33,20 @@
       (util/flash-redirect (str "/form-builder/" (:form/id form))
                            "Form creation successful.")
       (util/flash-redirect "/dashboard" "Something went wrong."))))
+
+(defn publish
+  "Publish a form"
+  [{{:keys [user]} :session
+    {:keys [id]} :route-params}]
+  (let [form-id (UUID/fromString id)]
+    (case (form/publish! user form-id)
+      {:error :unauthorized-access}
+      (util/flash-redirect "/dashboard" "Something went wrong.")
+
+      {:error :form-already-published}
+      (util/flash-redirect (str "/form-builder/" id) "Form already published.")
+
+      (util/flash-redirect "/dashboard"
+                           (list "Successfully published!"
+                                 [:a {:href (str "/form/" id)}
+                                  "Share Link."])))))
