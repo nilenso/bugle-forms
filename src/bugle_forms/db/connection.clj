@@ -13,3 +13,7 @@
            (jdbc/get-datasource db-spec)
            jdbc/snake-kebab-opts)
   :stop nil)
+
+(defn drop-db []
+  (jdbc/execute! datasource ["drop schema public cascade"])
+  (jdbc/execute! datasource ["create schema public"]))
