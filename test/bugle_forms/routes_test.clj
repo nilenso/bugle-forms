@@ -23,7 +23,8 @@
                                    ::sut/dashboard
                                    ::sut/form-builder
                                    ::sut/add-question
-                                   ::sut/create-form}
+                                   ::sut/create-form
+                                   ::sut/publish-form}
           all-access-routes #{::sut/home
                               ::sut/create-user
                               ::sut/not-found}

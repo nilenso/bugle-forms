@@ -18,7 +18,8 @@
     ["dashboard" {:get ::dashboard}]
     [["form-builder/" :id] {:get ::form-builder}]
     ["form" {"" {:post ::create-form}
-             ["/" :form-id "/question"] {:post ::add-question}}]
+             ["/" :form-id "/question"] {:post ::add-question}
+             ["/" :form-id "/publish"] {:post ::publish-form}}]
     ["public" {:get (bidi.ring/->Resources {:prefix "public"})}]
     [true ::not-found]]])
 
@@ -52,4 +53,6 @@
                    :access-control {:needs :member}
                    :validate {:spec ::specs/add-question-form
                               :field :form-params}}
+   ::publish-form {:handler form-handlers/publish
+                   :access-control {:needs :member}}
    ::not-found    {:handler util-handlers/not-found}})
