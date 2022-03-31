@@ -186,11 +186,18 @@ label {
     display: flex;
     font-size: 1.2em;
     margin-bottom: 0.3em;
-    align-items: center;
+    align-items: last baseline;
 }
 
-.form-list-item span {
+.form-list-item .timestamp-cell {
     margin-left: auto;
+}
+
+.form-list-item .share-link-cell {
+    font-size: 0.6em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-left: 0.4em;
 }
 
 .question-view {

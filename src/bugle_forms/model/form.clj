@@ -2,6 +2,8 @@
   (:refer-clojure :exclude [get])
   (:require
    [bugle-forms.db.connection :as db]
+   [bugle-forms.specs :as specs]
+   [clojure.spec.alpha :as s]
    [next.jdbc :as jdbc]
    [next.jdbc.date-time]
    [next.jdbc.sql :as sql]
@@ -35,6 +37,14 @@
                          (update :form/status keyword))]
     form
     {:error :form-not-found}))
+
+(defn link
+  "Get the share link for a form.
+  Returns `nil` if the form is invalid or unpublished."
+  [form]
+  (when (and (s/valid? ::specs/form form)
+             (= :published (:form/status form)))
+    (str "/form/" (:form/id form))))
 
 (defn get-forms
   "Retrieve forms belonging to a user."

@@ -1,5 +1,6 @@
 (ns bugle-forms.views.form
   (:require
+   [bugle-forms.model.form :as form]
    [bugle-forms.views.utils :as util])
   (:import
    (java.time ZoneId)
@@ -40,12 +41,18 @@
   "Show a list of all forms belonging to a user."
   [forms]
   (list
-   [:div {:class "form-list-header"} "Form name" [:span "Created on"]]
+   [:div {:class "form-list-header"}
+    "Form name" [:span "Created on"]]
    [:hr]
    (map (fn [form]
           [:div {:class "form-list-item"}
-           [:a {:href (str "/form-builder/" (:form/id form))} (:form/name form)]
-           [:span (formatted-time (:form/created form))]])
+           [:a {:href (str "/form-builder/" (:form/id form))}
+            (:form/name form)]
+           (when-let [form-link (form/link form)]
+             [:span {:class "share-link-cell"}
+              [:a {:href form-link} "[share link]"]])
+           [:span {:class "timestamp-cell"}
+            (formatted-time (:form/created form))]])
         forms)))
 
 (defn form-builder
