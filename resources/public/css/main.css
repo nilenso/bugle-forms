@@ -186,11 +186,18 @@ label {
     display: flex;
     font-size: 1.2em;
     margin-bottom: 0.3em;
-    align-items: center;
+    align-items: last baseline;
 }
 
-.form-list-item span {
+.form-list-item .timestamp-cell {
     margin-left: auto;
+}
+
+.form-list-item .share-link-cell {
+    font-size: 0.6em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-left: 0.4em;
 }
 
 .question-view {
@@ -215,4 +222,18 @@ label {
 .question-view li {
     list-style-type: disclosure-closed;
     margin-bottom: 0.3em;
+}
+
+#question-input {
+    align-items: baseline;
+}
+
+#add-question {
+    margin-top: 0.4em;
+}
+
+#publish-form {
+    background-color: #60935D;
+    color: #FCF7F8;
+    font-weight: 600;
 }

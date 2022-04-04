@@ -22,10 +22,10 @@
 (defn setup-db [tests]
   (mount/stop #'db/datasource)
   (mount/start #'db/datasource)
-  (migrations/rollback)
+  (db/drop-db)
   (migrations/migrate)
   (try (tests)
-       (finally (migrations/rollback)))
+       (finally (db/drop-db)))
   (mount/stop #'db/datasource))
 
 (defn clear-db [tests]

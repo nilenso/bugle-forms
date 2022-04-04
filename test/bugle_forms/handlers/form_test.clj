@@ -48,3 +48,17 @@
                                     :uuid user-id}}}
           response (sut/form-builder request)]
       (is (= 404 (:status response))))))
+
+(deftest publish-form
+  (testing "Publishing a form redirects to dashboard"
+    (let [user (factories/user)
+          {user-id :user-account/id} (user/insert! user)
+          form (factories/form {:form/owner user-id
+                                :form/status :draft})
+          {form-id :form/id} (form/insert! form)
+          request {:route-params {:form-id (str form-id)}
+                   :session {:user {:name (:user/name user)
+                                    :uuid user-id}}}
+          response (sut/publish request)]
+      (is (= 303 (:status response)))
+      (is (= {"Location" "/dashboard"} (:headers response))))))

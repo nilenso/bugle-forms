@@ -12,7 +12,8 @@
 (defn form-builder
   "Return form builder page."
   [{{:keys [id]} :route-params
-    {:keys [user]} :session}]
+    {:keys [user]} :session
+    :keys [flash]}]
   (let [form-id (UUID/fromString id)
         {:keys [form/name error]} (form/get form-id)
         questions (question/get-questions form-id)]
@@ -20,7 +21,8 @@
       (response/not-found "404. Form not found.")
       (response/response (layout/application
                           {:title (str "Editing: " name)
-                           :user user}
+                           :user user
+                           :flash flash}
                           (form-views/form-builder
                            form-id questions))))))
 
@@ -33,3 +35,21 @@
       (util/flash-redirect (str "/form-builder/" (:form/id form))
                            "Form creation successful.")
       (util/flash-redirect "/dashboard" "Something went wrong."))))
+
+(defn publish
+  "Publish a form"
+  [{{:keys [user]} :session
+    {form-id-str :form-id} :route-params}]
+  (let [form-id (UUID/fromString form-id-str)]
+    (case (form/publish! user form-id)
+      {:error :unauthorized-access}
+      (util/flash-redirect "/dashboard" "Something went wrong.")
+
+      {:error :form-already-published}
+      (util/flash-redirect (str "/form-builder/" form-id-str)
+                           "Form already published.")
+
+      (util/flash-redirect "/dashboard"
+                           (list "Successfully published!"
+                                 [:a {:href (str "/form/" form-id-str)}
+                                  " [Share Link]"])))))

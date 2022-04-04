@@ -42,11 +42,13 @@
 (s/def :form/id uuid?)
 (s/def :form/name (s/and string? seq))
 (s/def :form/owner uuid?)
+(s/def :form/status #{:draft :published})
 (s/def :form/created inst?)
 
 (s/def ::form
   (s/keys :req [:form/id
                 :form/name
+                :form/status
                 :form/owner
                 :form/created]))
 
@@ -68,3 +70,14 @@
 
 (s/def ::add-question-form
   (s/keys :req-un [:question/text]))
+
+(s/def :response/id uuid?)
+(s/def :response/form-id uuid?)
+(s/def :response/created inst?)
+(s/def :response/updated inst?)
+
+(s/def ::response
+  (s/keys :req [:response/id
+                :response/form-id
+                :response/created
+                :response/updated]))
