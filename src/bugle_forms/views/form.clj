@@ -15,7 +15,9 @@
      :id "name"
      :name "name"
      :type "text"
-     :placeholder "Enter form name...")
+     :placeholder "Enter form name..."
+     :required true
+     :pattern ".*\\S+.*")
     [:button {:type "submit" :class "btn"} "→"]]])
 
 (defn list-questions
@@ -64,12 +66,17 @@
     [:label {:for "text" :class "form-label"}
      "Enter your question:"]
     [:span {:class "builder-control" :id "question-input"}
-     [:input {:class "form-control" :type "text"
-             :name "text" :id "text"}]
+     [:input {:class "form-control"
+              :type "text"
+              :name "text"
+              :id "text"
+              :required true
+              :pattern ".*\\S+.*"}]
      [:button {:formaction (str "/form/" form-id "/question")
                :type "submit"
                :id "add-question" :class "btn"}
-      "+"]]
+      "+"]]]
+   [:form {:method "post"}
     [:span {:class "builder-control"}
      [:button {:formaction (str "/form/" form-id "/publish")
                :type "submit"
