@@ -1,7 +1,9 @@
 (ns bugle-forms.specs
   (:require
    [clojure.spec.alpha :as s]
-   [clojure.spec.gen.alpha :as gen]))
+   [clojure.spec.gen.alpha :as gen])
+  (:import
+   [java.util UUID]))
 
 (def ^:private
   non-empty-alphanumeric-string
@@ -81,3 +83,26 @@
                 :response/form-id
                 :response/created
                 :response/updated]))
+
+(s/def :answer/id uuid?)
+(s/def :answer/response-id uuid?)
+(s/def :answer/question-id uuid?)
+(s/def :answer/text (s/nilable string?))
+(s/def :answer/created inst?)
+(s/def :answer/updated inst?)
+
+(s/def ::question-id
+  (s/with-gen (and string? #(uuid? (UUID/fromString %)))
+    (fn [] (gen/fmap str (gen/uuid)))))
+
+(s/def ::create-response-form-params
+  (s/map-of ::question-id
+            :answer/text))
+
+(s/def ::answer
+  (s/keys :req [:answer/id
+                :answer/response-id
+                :answer/question-id
+                :answer/text
+                :answer/created
+                :answer/updated]))
