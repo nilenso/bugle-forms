@@ -60,25 +60,29 @@
 (defn form-builder
   "Generate representation of form builder."
   [form-id questions]
-  [:div
-   (list-questions questions)
-   [:form {:method "post"}
-    [:label {:for "text" :class "form-label"}
-     "Enter your question:"]
-    [:span {:class "builder-control" :id "question-input"}
-     [:input {:class "form-control"
-              :type "text"
-              :name "text"
-              :id "text"
-              :required true
-              :pattern ".*\\S+.*"}]
-     [:button {:formaction (str "/form/" form-id "/question")
-               :type "submit"
-               :id "add-question" :class "btn"}
-      "+"]]]
-   [:form {:method "post"}
-    [:span {:class "builder-control"}
-     [:button {:formaction (str "/form/" form-id "/publish")
-               :type "submit"
-               :id "publish-form" :class "btn"}
-      "Publish"]]]])
+  (let [form (form/get form-id)]
+    [:div
+     (list-questions questions)
+     (if-not (form/published? form)
+       (list [:form {:method "post"}
+              [:label {:for "text" :class "form-label"}
+               "Enter your question:"]
+              [:span {:class "builder-control" :id "question-input"}
+               [:input {:class "form-control"
+                        :type "text"
+                        :name "text"
+                        :id "text"
+                        :required true
+                        :pattern ".*\\S+.*"}]
+               [:button {:formaction (str "/form/" form-id "/question")
+                         :type "submit"
+                         :id "add-question" :class "btn"}
+                "+"]]]
+             [:form {:method "post"}
+              [:span {:class "builder-control"}
+               [:button {:formaction (str "/form/" form-id "/publish")
+                         :type "submit"
+                         :id "publish-form" :class "btn"}
+                "Publish"]]])
+       [:span {:class "builder-control"}
+        [:h3 [:a {:href (form/link form)} "[share link]"]]])]))
