@@ -13,7 +13,6 @@
 
 (def app
   (-> dispatch/route-handler
-      m/wrap-keyword-form-params
       wrap-params
       wrap-flash
       wrap-session

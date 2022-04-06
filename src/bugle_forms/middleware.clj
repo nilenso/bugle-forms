@@ -36,13 +36,16 @@
   If the `:spec` option is given, the handler is called only when the `:field`
   value in the request matches the spec, else a 400 status response is
   returned."
-  [handler {:keys [spec field]}]
-  (fn [request]
-    (if-not spec
-      (handler request)
-      (if (s/valid? spec (get request field))
+  [handler {:keys [spec field no-keywordize-field]}]
+  (let [handler (if no-keywordize-field
+                  handler
+                  (wrap-keyword-form-params handler))]
+    (fn [request]
+      (if-not spec
         (handler request)
-        (util-handlers/bad-request request)))))
+        (if (s/valid? spec (get request field))
+          (handler request)
+          (util-handlers/bad-request request))))))
 
 (defn has-access?
   "Does this user have access to a resource?"
