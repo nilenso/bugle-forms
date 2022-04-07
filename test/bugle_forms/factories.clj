@@ -41,4 +41,8 @@
                  {:name "question-form-params"
                   :spec ::specs/add-question-form}
                  {:name "answer"
-                  :spec ::specs/answer}])
+                  :spec ::specs/answer}
+                 {:name "response"
+                  :spec ::specs/response}
+                 {:name "response-form-params"
+                  :spec ::specs/create-response-form-params}])
