@@ -22,31 +22,33 @@
       (is (s/valid? ::specs/form form))))
 
   (testing "Form is successfully inserted in database"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id})
+          form (factories/create (factories/form {:form/owner user-id}))
           {:form/keys [id]} (sut/insert! form)]
       (is (not-empty (sql/get-by-id db/datasource :form id))))))
 
 (deftest get-form-data
   (testing "We can `get` an inserted form"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id})
+          form (factories/create (factories/form {:form/owner user-id}))
           {:form/keys [id]} (sut/insert! form)
           inserted-form (-> (sql/get-by-id db/datasource :form id)
                             (update :form/status keyword))]
       (is (= (sut/get id) inserted-form))))
 
   (testing "Cannot `get` a form that does not exist"
-    (let [non-existent-form (factories/form)
+    (let [non-existent-form (factories/create (factories/form))
           non-existent-get-result (sut/get (:form/id non-existent-form))]
       (is (= :form-not-found (:error non-existent-get-result)))))
 
   (testing "All the user's forms are retrieved correctly"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          forms (repeatedly 3 (partial factories/form {:form/owner user-id}))
+          forms (factories/create
+                 (gen/vector
+                  (factories/form {:form/owner user-id})))
           _ (mapv sut/insert! forms)
           retrieved-forms (sut/get-forms {:uuid user-id})
           expected (map #(select-keys % [:form/id :form/name :form/created])
@@ -67,16 +69,16 @@
 ;; `deftest`
 (deftest create-form-non-existent-user
   (testing "Cannot insert a form for a non-existent user"
-    (let [form (factories/form)]
+    (let [form (factories/create (factories/form))]
       (is (thrown? org.postgresql.util.PSQLException
                    (sut/insert! form))))))
 
 (deftest publish-form
   (testing "We can change status of a draft form to published"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id
-                                :form/status :draft})
+          form (factories/create (factories/form {:form/owner user-id
+                                                  :form/status :draft}))
           {:form/keys [id]} (sut/insert! form)
           publish-result (sut/publish! {:uuid user-id} id)
           published-form (sut/get id)]
@@ -84,26 +86,26 @@
       (is (= :published (:form/status published-form)))))
 
   (testing "We cannot publish a form that's already published"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id})
+          form (factories/create (factories/form {:form/owner user-id}))
           {:form/keys [id]} (sut/insert! form)
           _ (sut/publish! {:uuid user-id} id)
           republish-result (sut/publish! {:uuid user-id} id)]
       (is (= :form-already-published (:error republish-result)))))
 
   (testing "Error when trying to publish a form as a non-owner"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id
-                                :form/status :draft})
+          form (factories/create (factories/form {:form/owner user-id
+                                                  :form/status :draft}))
           {:form/keys [id]} (sut/insert! form)
           unauthorized-user-id (gen/generate gen/uuid)
           unauthorized-publish-result (sut/publish! unauthorized-user-id id)]
       (is (= :unauthorized-access (:error unauthorized-publish-result)))))
 
   (testing "Error when trying to publish a non-existent form"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
           non-existent-form-id (gen/generate gen/uuid)
           result (sut/publish! user-id non-existent-form-id)]
@@ -111,7 +113,7 @@
 
 (deftest generate-form-link
   (testing "form link is generated for a valid form"
-    (let [form (factories/form)
+    (let [form (factories/create (factories/form))
           expected-link (str "/form/" (:form/id form))
           actual-link (sut/link form)]
       (is expected-link actual-link)))
@@ -122,6 +124,6 @@
       (is (nil? generated-link))))
 
   (testing "form link is `nil` for unpublished form"
-    (let [form (factories/form {:form/status :draft})
+    (let [form (factories/create (factories/form {:form/status :draft}))
           generated-link (sut/link form)]
       (is (nil? generated-link)))))

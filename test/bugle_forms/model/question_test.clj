@@ -23,12 +23,13 @@
       (is (s/valid? ::specs/question question))))
 
   (testing "Questions are successfully inserted in database"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id})
+          form (factories/create (factories/form {:form/owner user-id}))
           {form-id :form/id} (form/insert! form)
-          questions (repeatedly 5 (partial factories/question
-                                           {:question/form-id form-id}))
+          questions (factories/create
+                     (gen/vector (factories/question
+                                  {:question/form-id form-id})))
           _ (run! sut/insert! questions)]
       (is (every? not-empty
                   (map (partial sql/get-by-id db/datasource :question)
@@ -36,12 +37,13 @@
 
 (deftest get-questions-of-form
   (testing "`get-questions` retrieves all the questions for a form"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id})
+          form (factories/create (factories/form {:form/owner user-id}))
           {form-id :form/id} (form/insert! form)
-          questions (repeatedly 5 (partial factories/question
-                                           {:question/form-id form-id}))
+          questions (factories/create
+                     (gen/vector (factories/question
+                                  {:question/form-id form-id})))
           _ (run! sut/insert! questions)
           question-ids (map :question/id questions)
           retrieved-questions (sut/get-questions form-id)
@@ -55,6 +57,6 @@
 
 (deftest create-question-non-existent-form
   (testing "Cannot insert a question for a non-existent form"
-    (let [question (factories/question)]
+    (let [question (factories/create (factories/question))]
       (is (thrown? org.postgresql.util.PSQLException
                    (sut/insert! question))))))

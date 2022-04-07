@@ -14,9 +14,10 @@
 
 (deftest create-form
   (testing "Form creation handler is successfully creating a form"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {:user-account/keys [id]} (user/insert! user)
-          {form-name :name :as form-params} (factories/create-form-params)
+          {form-name :name :as form-params}
+          (factories/create (factories/create-form-params))
           request {:form-params form-params
                    :session {:user {:name (:user/name user)
                                     :uuid id}}}
@@ -29,9 +30,9 @@
 
 (deftest form-builder
   (testing "Form builder is correctly rendered for a particular form"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id})
+          form (factories/create (factories/form {:form/owner user-id}))
           {form-id :form/id} (form/insert! form)
           request {:route-params {:id (.toString form-id)}
                    :session {:user {:name (:user/name user)
@@ -40,9 +41,9 @@
       (is (= 200 (:status response)))))
 
   (testing "404 when accessing a form that does not exist"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          non-existent-form (factories/form)
+          non-existent-form (factories/create (factories/form))
           request {:route-params {:id (str (:form/id non-existent-form))}
                    :session {:user {:name (:user/name user)
                                     :uuid user-id}}}
@@ -51,10 +52,11 @@
 
 (deftest publish-form
   (testing "Publishing a form redirects to dashboard"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id
-                                :form/status :draft})
+          form (factories/create
+                (factories/form {:form/owner user-id
+                                 :form/status :draft}))
           {form-id :form/id} (form/insert! form)
           request {:route-params {:form-id (str form-id)}
                    :session {:user {:name (:user/name user)

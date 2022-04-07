@@ -4,7 +4,6 @@
    [bugle-forms.factories :as factories]
    [bugle-forms.fixtures :as fixtures]
    [bugle-forms.handlers.question :as sut]
-   [bugle-forms.model.question :as question]
    [bugle-forms.model.form :as form]
    [bugle-forms.model.user :as user]
    [clojure.test :refer [deftest is testing use-fixtures]]
@@ -15,12 +14,12 @@
 
 (deftest add-question
   (testing "Add question handler successfully adds a question to form"
-    (let [user (factories/user)
+    (let [user (factories/create (factories/user))
           {user-id :user-account/id} (user/insert! user)
-          form (factories/form {:form/owner user-id})
+          form (factories/create (factories/form {:form/owner user-id}))
           {form-id :form/id} (form/insert! form)
           {question-text :text :as form-params}
-          (factories/question-form-params)
+          (factories/create (factories/question-form-params))
           request {:form-params form-params
                    :route-params {:form-id (str form-id)}
                    :session {:user {:name (:user/name user)
