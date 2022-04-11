@@ -37,6 +37,10 @@
   value in the request matches the spec, else a 400 status response is
   returned."
   [handler {:keys [spec field no-keywordize-field]}]
+  ;; FIXME: Keywordizing all the fields is a security issue. A malicious client
+  ;; can spam maps with randomly generated keys and since keywords are not GC'd,
+  ;; we will run out of memory. Ideally we want to keywordize *only* the keys
+  ;; that we care about, and not all of them.
   (let [handler (if no-keywordize-field
                   handler
                   (wrap-keyword-form-params handler))]
