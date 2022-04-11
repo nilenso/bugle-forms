@@ -47,7 +47,7 @@
           _ (run! sut/insert! questions)
           question-ids (map :question/id questions)
           retrieved-questions (sut/get-questions form-id)
-          retrieved-question-ids (map :id retrieved-questions)]
+          retrieved-question-ids (map :question/id retrieved-questions)]
       (is (= question-ids retrieved-question-ids))))
 
   (testing "`get-questions` for non-existent form returns empty collection"

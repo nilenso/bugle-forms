@@ -27,5 +27,5 @@
   "Retrieve questions for a given form"
   [form-id]
   (plan/select!
-   db/datasource [:id :text]
+   db/datasource [:question/id :question/text]
    ["select id, text from question where form_id = ?" form-id]))
