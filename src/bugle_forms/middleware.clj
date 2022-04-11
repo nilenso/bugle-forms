@@ -47,9 +47,12 @@
     (fn [request]
       (if-not spec
         (handler request)
-        (if (s/valid? spec (get request field))
-          (handler request)
-          (util-handlers/bad-request request))))))
+        (let [field-to-validate (get request field)]
+          (if (s/valid? spec (if no-keywordize-field
+                               field-to-validate
+                               (walk/keywordize-keys field-to-validate)))
+            (handler request)
+            (util-handlers/bad-request request)))))))
 
 (defn has-access?
   "Does this user have access to a resource?"

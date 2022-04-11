@@ -29,7 +29,7 @@
        [:h4 "Questions"]
        [:ul
         (map (fn [question]
-               [:li (:text question)])
+               [:li (:question/text question)])
              questions)]]))
 
 (defn formatted-time

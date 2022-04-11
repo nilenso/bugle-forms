@@ -3,6 +3,7 @@
    [bidi.ring]
    [bugle-forms.handlers.form :as form-handlers]
    [bugle-forms.handlers.question :as question-handlers]
+   [bugle-forms.handlers.response :as response-handlers]
    [bugle-forms.handlers.user :as user-handlers]
    [bugle-forms.handlers.utils :as util-handlers]
    [bugle-forms.specs :as specs]))
@@ -20,7 +21,8 @@
     ["form" {"" {:post ::create-form}
              ["/" :form-id] {:get ::response-form}
              ["/" :form-id "/question"] {:post ::add-question}
-             ["/" :form-id "/publish"] {:post ::publish-form}}]
+             ["/" :form-id "/publish"] {:post ::publish-form}
+             ["/" :form-id "/response"] {:post ::create-response}}]
     ["public" {:get (bidi.ring/->Resources {:prefix "public"})}]
     [true ::not-found]]])
 
@@ -56,10 +58,13 @@
                                :field :form-params}}
    ::publish-form  {:handler form-handlers/publish
                     :access-control {:needs :member}}
-   ::response-form {:handler (fn [{{:keys [form-id]} :route-params}]
-                               {:status 200
-                                :headers {}
-                                :body (str "stub for form response: "
-                                           form-id)})
+   ::response-form {:handler response-handlers/response-form
                     :access-control {:needs :member}}
+   ::create-response {:handler response-handlers/create
+                      :validate {:spec ::specs/create-response-form-params
+                                 :field :form-params
+                                 :no-keywordize-field true}
+                      ;; reconsider access control
+                      ;; {:permitted-roles #{:member ...}}
+                      }
    ::not-found     {:handler util-handlers/not-found}})

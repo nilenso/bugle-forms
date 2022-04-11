@@ -232,8 +232,14 @@ label {
     margin-top: 0.4em;
 }
 
-#publish-form {
+#publish-form, #submit-response {
     background-color: #60935D;
     color: #FCF7F8;
     font-weight: 600;
+}
+
+.response-form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 2rem;
 }

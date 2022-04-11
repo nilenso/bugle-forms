@@ -28,6 +28,7 @@
                                    ::sut/response-form}
           all-access-routes #{::sut/home
                               ::sut/create-user
+                              ::sut/create-response
                               ::sut/not-found}
           all-routes (cljset/union
                       expected-guest-routes
