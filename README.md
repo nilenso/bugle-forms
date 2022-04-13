@@ -1,4 +1,4 @@
-**Note**: The latest changes are found in the `fill-form-story` branch that have not been merged due to incomplete tests.
+**Note**: The latest changes are found in the `fill-form-story` branch that has not been merged due to incomplete tests.
 
 # Bugle Forms
 
